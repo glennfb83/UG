@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Clicker</title>
+<style>
+  body { margin: 0; font-family: Arial; text-align: center; background: #f2f2f2; }
+  .navbar { background: #333; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
+  .navbar a { color: white; text-decoration: none; padding: 8px 16px; font-weight: bold; }
+  .navbar a:hover { background-color: #575757; border-radius: 4px; }
+  .navbar .logo { font-size: 24px; }
+  #blocks { display: flex; justify-content: center; margin-top: 40px; gap: 10px; }
+  .block { width: 80px; height: 80px; cursor: pointer; border-radius: 8px; }
+</style>
+</head>
+<body>
+<div class="navbar"><div class="logo">Unblocked Games</div><div class="menu"><a href="index.html">Home</a></div></div>
+<h1>Color Clicker</h1>
+<div id="target">Target Color: <span id="targetColor"></span></div>
+<div id="blocks"></div>
+<div id="score">Score: 0</div>
+
+<script>
+const colors = ['red','green','blue','yellow','purple','orange'];
+let score = 0;
+function newRound(){
+  const target = colors[Math.floor(Math.random()*colors.length)];
+  document.getElementById('targetColor').innerText = target;
+  const container = document.getElementById('blocks');
+  container.innerHTML='';
+  colors.sort(()=>0.5-Math.random()).slice(0,4).forEach(c=>{
+    const div=document.createElement('div');
+    div.className='block'; div.style.background=c;
+    div.onclick=()=>{ if(c===target){score++; newRound();} else {score--; newRound();} document.getElementById('score').innerText='Score: '+score; };
+    container.appendChild(div);
+  });
+}
+newRound();
+</script>
+</body>
+</html>
