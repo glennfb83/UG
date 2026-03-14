@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Quiz</title>
+<style>
+body{margin:0;font-family:Arial;text-align:center;background:#f2f2f2;}
+.navbar{background:#333;display:flex;justify-content:space-between;align-items:center;padding:10px 20px;}
+.navbar a{color:white;text-decoration:none;padding:8px 16px;font-weight:bold;}
+.navbar a:hover{background:#575757;border-radius:4px;}
+.navbar .logo{font-size:24px;}
+button{padding:10px 20px;margin:10px;font-size:20px;border-radius:8px;border:none;background:#333;color:white;cursor:pointer;}
+button:hover{background:#575757;}
+</style>
+</head>
+<body>
+<div class="navbar"><div class="logo">Unblocked Games</div><div class="menu"><a href="index.html">Home</a></div></div>
+<h1>Math Quiz</h1>
+<div id="question"></div>
+<div id="answers"></div>
+<div id="score">Score: 0</div>
+
+<script>
+let score=0;
+function newQuestion(){
+  const a=Math.floor(Math.random()*10)+1;
+  const b=Math.floor(Math.random()*10)+1;
+  const ans=a+b;
+  document.getElementById('question').innerText=`${a} + ${b} = ?`;
+  const container=document.getElementById('answers');
+  container.innerHTML='';
+  let options=[ans, ans+1, ans-1, ans+2].sort(()=>0.5-Math.random());
+  options.forEach(o=>{
+    const btn=document.createElement('button');
+    btn.innerText=o;
+    btn.onclick=()=>{ if(o===ans){score++;} else {score--;} document.getElementById('score').innerText='Score: '+score; newQuestion(); };
+    container.appendChild(btn);
+  });
+}
+newQuestion();
+</script>
+</body>
+</html>
