@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flappy Block</title>
+  <style>
+    body { margin: 0; text-align: center; font-family: Arial; background: #f2f2f2; }
+    .navbar { background: #333; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
+    .navbar a { color: white; text-decoration: none; padding: 8px 16px; font-weight: bold; }
+    .navbar a:hover { background-color: #575757; border-radius: 4px; }
+    .navbar .logo { font-size: 24px; }
+    canvas { background: #87ceeb; display: block; margin: 20px auto; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">Unblocked Games</div>
+    <div class="menu"><a href="index.html">Home</a></div>
+  </div>
+  <h1>Flappy Block</h1>
+  <canvas id="canvas" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let y = 200, x = 50, dy = 0;
+    let pipes = [], score = 0;
+
+    function spawnPipe() {
+      const height = Math.random()*150 + 50;
+      pipes.push({x:400, height:height});
+    }
+
+    function gameLoop() {
+      ctx.clearRect(0,0,400,400);
+      // Player
+      dy += 0.5;
+      y += dy;
+      ctx.fillStyle = 'red';
+      ctx.fillRect(x,y,20,20);
+      if(y>380 || y<0){ alert('Game Over! Score: '+score); y=200; dy=0; pipes=[]; score=0; }
+
+      // Pipes
+      if(Math.random()<0.02) spawnPipe();
+      pipes.forEach(p => {
+        p.x -= 2;
+        ctx.fillStyle='green';
+        ctx.fillRect(p.x,0,40,p.height);
+        ctx.fillRect(p.x,p.height+100,40,400);
+        // Collision
+        if(x+20>p.x && x< p.x+40 && (y< p.height || y>p.height+100)){ alert('Game Over! Score: '+score); y=200; dy=0; pipes=[]; score=0; }
+        if(p.x+40==x){ score++; }
+      });
+      ctx.fillStyle='black';
+      ctx.fillText('Score: '+score, 10, 20);
+    }
+
+    document.addEventListener('keydown', ()=>{ dy=-7; });
+    setInterval(gameLoop, 20);
+  </script>
+</body>
+</html>
