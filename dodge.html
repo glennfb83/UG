@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dodge Game</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f2f2f2; text-align: center; }
+    .navbar { background: #333; overflow: hidden; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
+    .navbar a { color: white; text-decoration: none; padding: 8px 16px; font-weight: bold; }
+    .navbar a:hover { background-color: #575757; border-radius: 4px; }
+    .navbar .logo { font-size: 24px; }
+    canvas { background-color: #222; margin-top: 20px; display: block; margin-left: auto; margin-right: auto; border-radius: 8px; }
+    h1 { margin-top: 20px; }
+    #score { font-size: 24px; margin: 10px; }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="logo">Unblocked Games</div>
+    <div class="menu">
+      <a href="index.html">Home</a>
+    </div>
+  </div>
+
+  <h1>Dodge Game</h1>
+  <div id="score">Score: 0</div>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let player = {x: 180, y: 350, width: 40, height: 40};
+    let obstacles = [];
+    let score = 0;
+    let speed = 2;
+
+    function spawnObstacle() {
+      const x = Math.random() * (canvas.width - 40);
+      obstacles.push({x: x, y: -20, width: 40, height: 20});
+    }
+
+    function drawPlayer() {
+      ctx.fillStyle = 'lime';
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+
+    function drawObstacles() {
+      ctx.fillStyle = 'red';
+      obstacles.forEach(o => ctx.fillRect(o.x, o.y, o.width, o.height));
+    }
+
+    function moveObstacles() {
+      obstacles.forEach(o => o.y += speed);
+      obstacles = obstacles.filter(o => o.y < canvas.height);
+    }
+
+    function checkCollision() {
+      for(let o of obstacles){
+        if(player.x < o.x + o.width && player.x + player.width > o.x &&
+           player.y < o.y + o.height && player.y + player.height > o.y){
+          alert('Game Over! Your score: ' + score);
+          obstacles = [];
+          score = 0;
+        }
+      }
+    }
+
+    function updateScore() {
+      score++;
+      document.getElementById('score').innerText = 'Score: ' + score;
+    }
+
+    function gameLoop() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      drawPlayer();
+      drawObstacles();
+      moveObstacles();
+      checkCollision();
+      if(Math.random() < 0.02) spawnObstacle();
+      updateScore();
+    }
+
+    document.addEventListener('keydown', e => {
+      const step = 20;
+      if(e.key === 'ArrowLeft' && player.x > 0) player.x -= step;
+      if(e.key === 'ArrowRight' && player.x + player.width < canvas.width) player.x += step;
+      if(e.key === 'ArrowUp' && player.y > 0) player.y -= step;
+      if(e.key === 'ArrowDown' && player.y + player.height < canvas.height) player.y += step;
+    });
+
+    setInterval(gameLoop, 50);
+  </script>
+
+</body>
+</html>
